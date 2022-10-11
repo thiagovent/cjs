@@ -1,6 +1,6 @@
 
 router = function() {
-  if (window.location.href.endsWith("/clockings")) {
+  if (window.location.href.includes("/clockings")) {
     waitFor(() => $("#table-timesheet")[0], () => calculateHours());
   }
 }
