@@ -1,3 +1,6 @@
+// deprecated: use meu-rh.js
+
+debug = (line) => console.log('# cjs # '+ line);
 
 function seek() {
 	document.getElementById("GB_txtJustificativa").value = "Expediente normal";
@@ -61,7 +64,7 @@ function twoLeftBehind(values, start) {
 };
 
 function calculateHours() {
-	let table = document.getElementById("ctl25_gridEspelhoCartao_gridEspelhoCartao");
+	let table = getElement("gridEspelhoCartao_gridEspelhoCartao");
 	let cell = table.getElementsByTagName("tr")[0].insertCell(3)
 	cell.innerHTML = "Horas";
 
@@ -81,16 +84,16 @@ function calculateHours() {
 		}
 	}
 
-	document.getElementById("ctl25_totaisEnvelope_cellUndefinedLabel").innerHTML = "<b>Calculado</b>";
-	document.getElementById("ctl25_totaisEnvelope_cellUndefinedLabel").align = "right";
+	getElement("totaisEnvelope_cellUndefinedLabel").innerHTML = "<b>Calculado</b>";
+	getElement("totaisEnvelope_cellUndefinedLabel").align = "right";
 
 	let hours = parseInt(total/60);
 	let minutes = (total % 60);
 	if (minutes < 0) {
 		minutes *= -1;
 	}
-	document.getElementById("ctl25_totaisEnvelope_cellUndefined").innerHTML = pad(hours) + ":" + pad(minutes);
-	document.getElementById("ctl25_totaisEnvelope_cellUndefined").className = "lblAbonos";
+	getElement("totaisEnvelope_cellUndefined").innerHTML = pad(hours) + ":" + pad(minutes);
+	getElement("totaisEnvelope_cellUndefined").className = "lblAbonos";
 };
 
 function pad(num, size) {
@@ -118,13 +121,26 @@ function getMinutes(html) {
 	return parseInt(splitted[0])*60+parseInt(splitted[1]);
 };
 
-function isGeneralView() { return document.getElementById("ctl25_EspelhoCartaoDiv"); }
+isAppointmentEntry = () => window.location.search.indexOf("MasterCaptionForAnnex") > 0;
 
-function isAppointmentEntry() { return window.location.search.indexOf("MasterCaptionForAnnex") > 0 }
 function addAppointmentButton() {
 	let seekCell = document.getElementById("GB_ButtonsCell").children[0].rows[0].insertCell();
-	seekCell.innerHTML = '<td style="padding-left: 10px"><span name="" id=""><table cellpadding="0" cellspacing="0"><tbody><tr><td align="center"><img id="GB_btn_tbimage" class="ToolButtonImage" onclick="seek()" src="/Corpore.Net/SharedServices/Images/gv_Refresh.gif" style="border-width: 0px; cursor: pointer;"><span><br></span><span id="GB_btn_tblabel" class="ToolButtonLabel" onclick="seek()">Automático</span></td></tr></tbody></table></span></td>';
+	seekCell.innerHTML = '<td style="padding-left: 10px"><span name="" id=""><table cellpadding="0" cellspacing="0"><tbody><tr><td align="center"><img id="GB_btn_tbimage" class="ToolButtonImage" onclick="seek()" src="/Corpore.Net/SharedServices/Images/gv_Refresh.gif" style="border-width: 0px; cursor: pointer;"><span><br></span><span id="GB_btn_tblabel" class="ToolButtonLabel" onclick="seek()">Autom&aacute;tico</span></td></tr></tbody></table></span></td>';
 }
 
-if (isAppointmentEntry()) addAppointmentButton();
-else if (isGeneralView()) calculateHours();
+getElement = (field) => document.getElementById(sequence + field);
+
+var sequence = 'ctl25';
+if (typeof _ChroGridEspelho !== 'undefined') {
+	debug('_ChroGridEspelho found');
+	sequence = _ChroGridEspelho.substring(0, _ChroGridEspelho.indexOf('_') +1);
+	debug('_ChroGridEspelho => ' + sequence);
+
+	debug('is general view');
+	calculateHours();
+} else if (isAppointmentEntry()) {
+	debug('is appointment');
+	addAppointmentButton();
+} else {
+	debug('unknow page');
+}
