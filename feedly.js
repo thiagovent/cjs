@@ -9,7 +9,7 @@ setInterval( function() {
 	let stories = document.getElementsByClassName("entryholder");
 	for (let item of spoilerAlert) {
 		for (var j = 0; j < stories.length; j++) {
-			 if (stories[j].innerHTML.indexOf(item) >= 0) {
+			 if (stories[j].innerHTML.toLowerCase().indexOf(item.toLowerCase()) >= 0) {
 			   stories[j].remove();
 			   log && console.log("Spoiler removed (" + (++spoilersCount) + ")");
 		   }
